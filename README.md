@@ -12,7 +12,7 @@ See [installation on different platforms](http://doc.silverstripe.org/framework/
 and [installation from source](http://doc.silverstripe.org/framework/en/installation/from-source).
 
 ## Links ##
-  *  <a href="yar.nzhost.me/task_1/">Task_1</a>
+  *  ([Task_1](http://yar.nzhost.me/task_1))
 
 
 ## License ##
