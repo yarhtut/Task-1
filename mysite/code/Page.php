@@ -60,7 +60,7 @@ class Page_Controller extends ContentController {
 			return false;
 
 		}else{
-
+			//json to array
 			$api_array = json_decode($api_json,true);
 
 			//$members = array();
@@ -79,18 +79,13 @@ class Page_Controller extends ContentController {
 				//$member['street'] = $data ['user'] ['location']['street'];
 				//$member['city'] = $data ['user'] ['location']['city'];
 
-
-
-
-
-
-
 				//push array to arraylist
 				$members->push($member);
 
 				//instantiate the class
 				$newMember = new RandomUser();
 
+                                //pass to the object 
 				$newMember->Title = $data ['user']['name'] ['title'];
 				$newMember->Gender = $data ['user'] ['gender'];
 				$newMember->DoB = $data ['user'] ['dob'];
