@@ -4,6 +4,7 @@ ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 error_reporting(-1);
 
+
 class Page extends SiteTree {
 
 	private static $db = array(
@@ -35,17 +36,15 @@ class Page_Controller extends ContentController {
 
 	);
 
+	/**
+	 * Request api json data
+	 */
 
 
 	public function getRandomData() {
 
-
-		//create arrayList
-		$members = ArrayList::create();
-
 		//api key or params
 		//$key = '';
-
 
 		//set Url
 		$api_url = 'http://api.randomuser.me/?results=3';
@@ -63,8 +62,27 @@ class Page_Controller extends ContentController {
 
 			$api_array = json_decode($api_json,true);
 
-			//$members = array();
-			foreach($api_array['results'] as $data){
+
+		}
+		//print_r($members); exit();
+		return $api_array;
+
+	}
+
+	/*
+	 * View able data to .SS
+	 */
+
+	public function getViewableData(){
+		//create arrayList
+		$members = ArrayList::create();
+
+		$api_array = $this->getRandomData();
+
+
+		if(isset($api_array['results'])){
+
+			foreach($api_array['results'] as $data) {
 				//create array
 				$member = array();
 
@@ -76,54 +94,56 @@ class Page_Controller extends ContentController {
 				$member['email'] = $data ['user'] ['email'];
 
 				$member['img'] = $data ['user'] ['picture']['thumbnail'];
-				//$member['street'] = $data ['user'] ['location']['street'];
-				//$member['city'] = $data ['user'] ['location']['city'];
 
 
-
-
-
-
-
-				//push array to arraylist
 				$members->push($member);
-
-				//instantiate the class
-				$newMember = new RandomUser();
-
-				$newMember->Title = $data ['user']['name'] ['title'];
-				$newMember->Gender = $data ['user'] ['gender'];
-				$newMember->DoB = $data ['user'] ['dob'];
-
-
-				$newMember->FirstName = $data ['user']['name'] ['first'];
-				$newMember->Surname = $data ['user']['name'] ['last'];
-
-				$newMember->Street = $data ['user']['location'] ['street'];
-				$newMember->City = $data ['user']['location'] ['city'];
-
-				$newMember->Email = $data ['user'] ['email'];
-				$newMember->Image = $data ['user'] ['picture']['thumbnail'];
-
-
-
-
-
-				//add to database
-				$newMember->write();
-
 
 			}
 		}
-
-		//print_r($members); exit();
-		return $members;
-
-
-
-
-
+			//print_r($members);exit();
+			//push array to arraylist
+			$this->writeToDatabase();
+			return $members;
 	}
+
+
+	/**
+	 *
+	 *  Save Data Array to  Member Table
+	 *
+	 * @return array
+	 * @throws ValidationException
+	 * @throws null
+	 */
+	public function writeToDatabase(){
+
+		$api_array = $this->getRandomData();
+
+		foreach($api_array['results'] as $data) {
+			$newMember = new RandomUser();
+
+			$newMember->Title = $data ['user']['name'] ['title'];
+			$newMember->Gender = $data ['user'] ['gender'];
+			$newMember->DoB = $data ['user'] ['dob'];
+
+
+			$newMember->FirstName = $data ['user']['name'] ['first'];
+			$newMember->Surname = $data ['user']['name'] ['last'];
+
+			$newMember->Street = $data ['user']['location'] ['street'];
+			$newMember->City = $data ['user']['location'] ['city'];
+
+			$newMember->Email = $data ['user'] ['email'];
+			$newMember->Image = $data ['user'] ['picture']['thumbnail'];
+
+			//add to database
+			$database = $newMember->write();
+
+		}
+
+		return $database;
+	}
+
 
 
 	public function init() {
