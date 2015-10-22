@@ -8,15 +8,22 @@
 class MyMember extends DataExtension{
 
 
-    private static $db = array(
-        "Title"=> "Varchar(10)",
-        "Gender"=>"text",
-        "DoB" => "Date",
-        "Street"=>"Varchar(100)",
-        "City"=>"text",
-        "Image"=>"Varchar(100)"
+    protected static $url = "https://api.randomuser.me/?result=3";    //url of the review to be scrapped
 
+    /**
+     * @param $url URL of Api call
+     */
+    public static function setUrl($url)
+    {
+        self::$url = $url;
+    }
 
-    );
+    /**
+     * @param $url URL of Api call
+     */
+    public static function getJob($params=[]){
+
+        $request = new RestfulService(self::setUrl());
+    }
 
 }
