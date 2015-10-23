@@ -7,8 +7,9 @@
  */
 class MyMember extends DataExtension{
 
+    //assigned $url
+    protected static $url = "https://api.randomuser.me/?result=3";
 
-    protected static $url = "https://api.randomuser.me/?result=3";    //url of the review to be scrapped
 
     /**
      * @param $url URL of Api call
@@ -18,12 +19,55 @@ class MyMember extends DataExtension{
         self::$url = $url;
     }
 
+
     /**
      * @param $url URL of Api call
      */
-    public static function getJob($params=[]){
+    public static function getViewableData($params=[])
+    {
+        //create arrayList
+        $members = ArrayList::create();
 
-        $request = new RestfulService(self::setUrl());
+        $api_array = self::requestApiCall($params[]);
+
+        if (isset($api_array['results'])) {
+
+            foreach ($api_array['results'] as $data) {
+                //create array
+                $member = array();
+
+                $members->push($member);
+
+
+            }
+        }
+
+        return $members;
     }
+
+
+    /**
+     * @param $url
+     * @param array $params
+     */
+    public static function requestApiCall($url,$params=[]){
+
+        $response = new RestfulService(self::setUrl());
+
+        if(!$response) {
+
+            SS_Log::log('No response from API' . $url, SS_Log::WARN);
+            return false;
+
+        }else{
+
+            $api_array = Convert::json2array($response);
+        }
+
+        return $api_array;
+    }
+
+
+
 
 }
