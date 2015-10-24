@@ -35,8 +35,21 @@ class MyMember extends DataExtension{
             foreach ($api_array['results'] as $data) {
                 //create array
                 $member = array();
+                $member['title'] = $data ['user']['name'] ['title'];
+                $member['gender'] = $data ['user']['gender'];
+
+                $member['firstname'] = $data ['user']['name'] ['first'];
+                $member['surname'] = $data ['user']['name'] ['last'];
+                $member['email'] = $data ['user'] ['email'];
+
+                $member['img'] = $data ['user'] ['picture']['thumbnail'];
+
 
                 $members->push($member);
+
+                $newMember = new MyMember();
+
+                $newMember->write();
 
 
             }
