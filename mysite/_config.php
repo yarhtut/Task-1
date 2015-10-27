@@ -13,5 +13,13 @@ $databaseConfig = array(
 	"path" => '',
 );
 
+
+// set the url for Module
+RandomApi::setUrl('http://api.randomuser.me');
+RandomApi::setParams('/?results=3');
+
+
+
+
 // Set the site locale
 i18n::set_locale('en_US');

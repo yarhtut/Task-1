@@ -2,84 +2,60 @@
 /**
  * Created by PhpStorm.
  * User: yarhtut
- * Date: 21/10/15
- * Time: 11:13 PM
+ * Date: 27/10/15
+ * Time: 2:40 PM
  */
+
 class MyMember extends DataExtension{
 
-    //assigned $url
-    protected static $url = "https://api.randomuser.me/?result=3";
+    private static $db = array(
+        "Title"=> "Varchar(10)",
+        "Gender"=>"text",
+        "DoB" => "Date",
+        "Street"=>"Varchar(100)",
+        "City"=>"text",
+        "Image"=>"Varchar(100)"
+
+    );
+
+    private static  $has_one = array();
 
 
-    /**
-     * @param $url URL of Api call
-     */
-    public static function setUrl($url)
-    {
-        self::$url = $url;
-    }
+    public function writeToDatabase(){
+
+        $api_array = RandomApi::getRandomData();
+
+        $results = $api_array['results'];
 
 
-    /**
-     * @param $url URL of Api call
-     */
-    public static function getViewableData($params=[])
-    {
-        //create arrayList
-        $members = ArrayList::create();
-
-        $api_array = self::requestApiCall($params[]);
-
-        if (isset($api_array['results'])) {
-
-            foreach ($api_array['results'] as $data) {
-                //create array
-                $member = array();
-                $member['title'] = $data ['user']['name'] ['title'];
-                $member['gender'] = $data ['user']['gender'];
-
-                $member['firstname'] = $data ['user']['name'] ['first'];
-                $member['surname'] = $data ['user']['name'] ['last'];
-                $member['email'] = $data ['user'] ['email'];
-
-                $member['img'] = $data ['user'] ['picture']['thumbnail'];
+        foreach($results as $data) {
 
 
-                $members->push($member);
 
-                $newMember = new MyMember();
+            $this->Title = $data ['user']['name'] ['title'];
+            $this->Gender = $data ['user'] ['gender'];
+            $this->DoB = $data ['user'] ['dob'];
 
-                $newMember->write();
+
+            $this->FirstName = $data ['user']['name'] ['first'];
+            $this->Surname = $data ['user']['name'] ['last'];
+
+            $this->Street = $data ['user']['location'] ['street'];
+            $this->City = $data ['user']['location'] ['city'];
+
+            $this->Email = $data ['user'] ['email'];
+            $this->Image = $data ['user'] ['picture']['thumbnail'];
+
+            //add to database
+
+                $database = $this->write();
 
 
-            }
+
         }
 
-        return $members;
+        return $database;
     }
-
-
-    /**
-     * @param $url
-     * @param array $params
-     */
-    public static function requestApiCall($url,$params=[]){
-
-        $response = new RestfulService(self::setUrl());
-
-        if(!$response) {
-
-            SS_Log::log('No response from API' . $url, SS_Log::WARN);
-            return false;
-
-        }else{
-
-            $api_array = Convert::json2array($response);
-        }
-
-        return $api_array;
-    }
-
 
 
 
